@@ -14,6 +14,8 @@ namespace PlayerController.Scripts
         [SerializeField] private Rigidbody2D[] rbs;
         
         [SerializeField] private float speed = 100f;
+
+        private bool _isPaused = false;
         
         private void Start()
         {
@@ -27,7 +29,7 @@ namespace PlayerController.Scripts
         {
             _movementInput = new Vector2(Input.GetAxisRaw("Horizontal"), 0f);
             _directionManager.ManageDirection(_movementInput);
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !_isPaused)
             {
                 foreach (var rb in (rbs))
                 {
@@ -38,10 +40,15 @@ namespace PlayerController.Scripts
 
         private void FixedUpdate()
         {
-            if (Mathf.Abs(_movementInput.x) > 0f || Mathf.Abs(_movementInput.y) > 0f )
+            if ((Mathf.Abs(_movementInput.x) > 0f || Mathf.Abs(_movementInput.y) > 0f) && !_isPaused)
             {
                 _movement.Move(_movementInput, speed);
             }
+        }
+
+        public void SetPaused(bool isPaused)
+        {
+            this._isPaused = isPaused;
         }
     }
 }
