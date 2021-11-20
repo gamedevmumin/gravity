@@ -42,8 +42,6 @@ namespace PlayerController.Scripts
             {
                 _movement.Move(_movementInput, speed);
             }
-
-
         }
     }
 }
