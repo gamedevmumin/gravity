@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 364233179650844337}
   - component: {fileID: 7971130897392221547}
   - component: {fileID: 4052237197331658089}
+  - component: {fileID: 5334890363651201978}
   m_Layer: 0
-  m_Name: spike (1)
+  m_Name: Spike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1317019865
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 3286163911610860551, guid: bc006441a30c9cb47b5d6288ba4e1fa4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -94,7 +95,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -114,3 +115,16 @@ PolygonCollider2D:
       - {x: -0.24342373, y: -0.31165484}
       - {x: 0.41373205, y: -0.3116548}
       - {x: 0.20982394, y: -0.007635027}
+--- !u!114 &5334890363651201978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3915016605150481035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40e7c2e6ba712a247ae39a8d0c8a7f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatToDamageTag: Player
