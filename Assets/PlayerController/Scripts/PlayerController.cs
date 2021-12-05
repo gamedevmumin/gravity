@@ -14,14 +14,15 @@ namespace PlayerController.Scripts
         [SerializeField] private Rigidbody2D[] rbs;
         
         [SerializeField] private float speed = 100f;
-
+        private IJumpingController _jumpingController;
         private bool _isPaused = false;
         
         private void Start()
         {
             _movement = GetComponent<IMovement>();
             _directionManager = GetComponent<IDirectionManager>();
-           // _gravityHandler = GetComponent<GravityHandler>();
+            _jumpingController = GetComponent<IJumpingController>();
+            // _gravityHandler = GetComponent<GravityHandler>();
         }
 
 
@@ -29,13 +30,7 @@ namespace PlayerController.Scripts
         {
             _movementInput = new Vector2(Input.GetAxisRaw("Horizontal"), 0f);
             _directionManager.ManageDirection(_movementInput);
-            if (Input.GetKeyDown(KeyCode.Space) && !_isPaused)
-            {
-                foreach (var rb in (rbs))
-                {
-                    rb.velocity = new Vector2(rb.velocity.x, 15f);
-                }
-            }
+            _jumpingController.ManageJumping();
         }
 
         private void FixedUpdate()

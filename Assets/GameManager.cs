@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(timeToSpawn);
         playerController.transform.position = currentCheckpoint.transform.position;
         playerController.gameObject.SetActive(true);
+        //playerController.GetComponent<Rigidbody2D>().position = currentCheckpoint.transform.position;
     }
 
     public void SwitchRoom(CinemachineVirtualCamera roomCamera)
