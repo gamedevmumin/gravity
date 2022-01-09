@@ -18,8 +18,8 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
     IGroundedChecking groundedChecker;
     [SerializeField]
     private float jumpHeight;
-    [SerializeField] private float wallJumpTime = 0.1f;
     [SerializeField] private Rigidbody2D[] rbs;
+    [SerializeField] private GravityInfo gravityInfo;
     
     private void Start()
     {
@@ -32,7 +32,6 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
         groundedRememberTimer -= Time.deltaTime;
         if (groundedChecker.IsGrounded())
         {
-            Debug.Log(groundedChecker.IsGrounded());
             groundedRememberTimer = groundedRemember;
         }
 
@@ -43,12 +42,11 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
 
             if (groundedRememberTimer > 0f && jumpPressedRememberTimer > 0f)
             {
-                Debug.Log("triedToJump");
                 jumpPressedRememberTimer = 0f;
                 groundedRememberTimer = 0f;
                 foreach (var rb in (rbs))
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
+                    rb.velocity = new Vector2(rb.velocity.x, jumpHeight*-gravityInfo.gravityDirection);
                 }
             } 
             
@@ -57,7 +55,7 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
                 foreach (var rb in (rbs))
                 {
                     if (rb.velocity.y > 0f)
-                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * cutOfJumpHeight);
+                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * cutOfJumpHeight*-gravityInfo.gravityDirection);
                 }
             }
     }

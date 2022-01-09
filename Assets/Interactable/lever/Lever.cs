@@ -1,30 +1,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class Lever : MonoBehaviour
+public class Lever : StateOwner
 {
-    private bool _isPulledLeft = true;
+    [SerializeField] private InteractableInfo interactableInfo;
 
     private bool _isInRange;
 
-    private Animator _animator;
+    [SerializeField] private Animator animator;
 
     private static readonly int Pulled = Animator.StringToHash("pulled");
 
+    private IStateListener _stateListener;
     // Start is called before the first frame update
     private void Start()
     {
-        _animator = GetComponent<Animator>();
+        _stateListener = GetComponent<IStateListener>();
     }
 
     // Update is called once per frame
     private void Update()
     {
         if (!_isInRange || !Input.GetKeyDown(KeyCode.E)) return;
-        _animator.SetTrigger(Pulled);
-        _isPulledLeft = !_isPulledLeft;
+        animator.SetTrigger(Pulled);
+        interactableInfo.IsActive = !interactableInfo.IsActive;
+        _stateListener.ReactOnStateChange(interactableInfo.IsActive);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -41,5 +45,21 @@ public class Lever : MonoBehaviour
         {
             _isInRange = false;
         }
+    }
+
+    public override void LoadState(bool isActive)
+    {
+        interactableInfo.IsActive = isActive;
+        animator.SetTrigger(Pulled);
+    }
+
+    public override bool CheckID(string id)
+    {
+        return id == interactableInfo.Id;
+    }
+    
+    public override InteractableInfo GetInfo()
+    {
+        return interactableInfo;
     }
 }

@@ -6,8 +6,7 @@ public class ScreeneFreezer : MonoBehaviour
     private bool isFrozen = false;
     private float duration;
     private bool shouldFreeze = false;
-    private float currentDuration = 0f;
-    
+
     public void Freeze(float duration)
     {
         if (shouldFreeze != true)

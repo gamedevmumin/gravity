@@ -10,7 +10,12 @@ namespace Collectibles.Star.Scripts
         [SerializeField] private GameEvent onCollected;
 
         [SerializeField] private ScreeneFreezer screenFreezer;
-        
+
+        public void Initialize(ScreeneFreezer screenFreezer)
+        {
+            this.screenFreezer = screenFreezer;
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag("Player")) return;

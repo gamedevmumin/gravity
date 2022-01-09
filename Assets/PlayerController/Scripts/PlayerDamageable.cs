@@ -14,7 +14,7 @@ namespace PlayerController.Scripts
         {
             screenFreezer.Freeze(0.1f);
             Instantiate(deathEffect, transform.position, transform.rotation);
-            gameObject.SetActive(false);
+            Destroy(gameObject);
             playerDeath.Raise();
         }
     }

@@ -14,8 +14,8 @@ public class CollectibleUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        starsAmountText.text = $"{levelInfo.collectedStars}";
-        maxStarsText.text = $"/{levelInfo.starsToCollect}";
+        starsAmountText.text = $"{levelInfo.CollectedStars}";
+        maxStarsText.text = $"/{levelInfo.StarsToCollect}";
         textAnimator.SetTrigger(Collected);
     }
 }

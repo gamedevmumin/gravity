@@ -1,3 +1,4 @@
+using System.Collections;
 using Interfaces;
 using PlayerController.Scripts;
 using UnityEngine;
@@ -7,33 +8,22 @@ namespace GeneralScripts.Gravity
 {
     public class GravityHandler : MonoBehaviour
     {
-        private Rigidbody2D _rb;
-        private ConstantForce2D _constantForce2D;
-    
         private bool _isGlobalGravityOn = true;
 
         private bool _isRoomGravityOn = false;
         private Vector2 _roomGravity;
 
-        private string previousRoomName;
         [FormerlySerializedAs("_roomCheckers")] [SerializeField] private RoomChecker[] roomCheckers;
         
         private bool _isPersonalGravityOn = false;
 
         private Vector2 _personalGravity;
 
-        private Quaternion _newRotation;
-        private IDirectionManager _directionManager;
-
         public Vector2 CurrentMovementAxis { get; private set; }
         
-        private void Awake()
-        {
-            _rb = GetComponent <Rigidbody2D>();
-            _directionManager = GetComponent<IDirectionManager>();
-            _constantForce2D = GetComponent<ConstantForce2D>();
-            _newRotation = transform.rotation;
-        }
+        [SerializeField] private Rigidbody2D[] rbs;
+        [SerializeField] private ConstantForce2D[] constantForce2Ds;
+        [SerializeField] private GravityInfo _gravityInfo;
 
         private void Update()
         {
@@ -46,17 +36,30 @@ namespace GeneralScripts.Gravity
         
         public void TurnOnRoomGravity(Vector2 gravity)
         {
-            _isRoomGravityOn = true;
-            _roomGravity = gravity;
-            _directionManager.ToggleSide();
-            ChangeGravity();
+            StartCoroutine(TurnOnRoomGravityCoroutine(gravity));
         }
 
+        private IEnumerator TurnOnRoomGravityCoroutine(Vector2 gravity)
+        {
+            yield return new WaitForSeconds(0.5f);
+            _isRoomGravityOn = true;
+            _roomGravity = gravity;
+            /*_directionManager.ToggleSide();*/
+            ChangeGravity();
+        }
+        
+        
         public void TurnOffRoomGravity()
         {
+            StartCoroutine(TurnOffRoomGravityCoroutine());
+        }
+
+        private IEnumerator TurnOffRoomGravityCoroutine()
+        {
+            yield return new WaitForSeconds(0f);
             _isRoomGravityOn = false;
             _roomGravity = Vector2.zero;
-            _directionManager.ToggleSide();
+            /*_directionManager.ToggleSide();*/
             ChangeGravity();
         }
     
@@ -78,25 +81,43 @@ namespace GeneralScripts.Gravity
         {
             if (_isRoomGravityOn)
             {
-                _constantForce2D.force = _roomGravity;
+                foreach (var constantForce2D in constantForce2Ds)
+                {
+                    Debug.Log(gameObject.tag);
+                    constantForce2D.force = _roomGravity;
+                    Debug.Log(_roomGravity.y);
+                    _gravityInfo.gravityDirection = (int)(_roomGravity.y / Mathf.Abs(_roomGravity.y));
+                    Debug.Log(_gravityInfo.gravityDirection);
+                }
             }
 
             if (_isPersonalGravityOn)
             {
-                _constantForce2D.force = _personalGravity;
+                foreach (var constantForce2D in constantForce2Ds)
+                {
+                    constantForce2D.force = _personalGravity;
+                    _gravityInfo.gravityDirection = (int)(_personalGravity.y / Mathf.Abs(_personalGravity.y));
+                    Debug.Log(_gravityInfo.gravityDirection);
+                }
             }
 
             if (!_isPersonalGravityOn && !_isRoomGravityOn)
             {
-                _constantForce2D.force = Vector2.zero;
+                foreach (var constantForce2D in constantForce2Ds)
+                {
+                    constantForce2D.force = Vector2.zero;
+                }
             }
         
             if (_isPersonalGravityOn || _isRoomGravityOn || !_isGlobalGravityOn)
             {
-                _rb.gravityScale = 0f;
-                var normalizedForceDirection =_constantForce2D.force.normalized;
+                foreach (var rb in (rbs))
+                {
+                    rb.gravityScale = 0f;
+                }
+                //     var normalizedForceDirection =_constantForce2D.force.normalized;
                 
-                var rotZ = Mathf.Atan2(normalizedForceDirection.y, normalizedForceDirection.x) * Mathf.Rad2Deg;
+                /*var rotZ = Mathf.Atan2(normalizedForceDirection.y, normalizedForceDirection.x) * Mathf.Rad2Deg;
                 if (normalizedForceDirection == Vector2.down)
                 {
                     _newRotation = Quaternion.Euler (0f, 0f, 0f);
@@ -113,16 +134,23 @@ namespace GeneralScripts.Gravity
                 {
                     _newRotation = Quaternion.Euler (0f, 0f, 90f);
                     CurrentMovementAxis =  Vector2.up;
-                }
+                }*/
             }
             else
             {
-                _rb.gravityScale = 2f;
-                var normalizedForceDirection =_constantForce2D.force.normalized;
+                foreach (var rb in (rbs))
+                {
+                    rb.gravityScale = 2f;
+                    _gravityInfo.gravityDirection = 1;
+                    Debug.Log(_gravityInfo.gravityDirection);
+                }
+
+                /*var normalizedForceDirection =_constantForce2D.force.normalized;
 
                 var rotZ = Mathf.Atan2(normalizedForceDirection.y, normalizedForceDirection.x) * Mathf.Rad2Deg;
-                _newRotation = Quaternion.Euler (0f, 0f, rotZ*-2 );
+                _newRotation = Quaternion.Euler (0f, 0f, rotZ*-2 );*/
             }
+            Debug.Log(_gravityInfo.gravityDirection);
         }
     }
 }
