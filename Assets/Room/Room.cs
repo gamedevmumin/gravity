@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
 using GeneralScripts.Gravity;
 using UnityEngine;
@@ -11,12 +12,16 @@ namespace Room
         [SerializeField] private RoomInfo roomInfo;
         [SerializeField] private GameManager gameManager;
         [SerializeField] private CinemachineVirtualCamera roomCamera;
-        [SerializeField] private Rigidbody2D[] rbs;
-        private GravityHandler _gravityHandler;
+        private List<GravityHandler> _gravityHandlers;
         private bool _cooldown = false;
 
         public RoomInfo RoomInfo => roomInfo;
 
+        private void Awake()
+        {
+            _gravityHandlers = new List<GravityHandler>();
+        }
+        
         public void TurnOnRoomGravity(GravityHandler gravityHandler)
         {
             gravityHandler.TurnOnRoomGravity(roomInfo.Gravity);
@@ -28,16 +33,12 @@ namespace Room
             if (other.CompareTag("Player"))
             {
                 gameManager.SwitchRoom(roomCamera);
-                _gravityHandler = gravityHandler;
             }
-            else if (other.CompareTag("Box"))
+
+            if (gravityHandler && !_cooldown)
             {
+                _gravityHandlers.Add(gravityHandler);
                 gravityHandler.TurnOnRoomGravity(roomInfo.Gravity);
-            }
-            
-            if (_gravityHandler && !_cooldown)
-            {
-                _gravityHandler.TurnOnRoomGravity(roomInfo.Gravity);
             }
         }
         
@@ -45,11 +46,11 @@ namespace Room
         public void ChangeRoomGravity(Vector2 roomGravity)
         {
             roomInfo.Gravity = roomGravity;
-            if (_gravityHandler)
+            foreach (var gravityHandler in _gravityHandlers)
             {
-                _gravityHandler.TurnOnRoomGravity(roomGravity);
+                gravityHandler.TurnOnRoomGravity(roomGravity);
             }
-            
+
         }
         
         private void OnTriggerExit2D(Collider2D other)
@@ -58,18 +59,8 @@ namespace Room
             if (gravityHandler && !_cooldown)
             {
                 gravityHandler.TurnOffRoomGravity();
-                if (other.CompareTag("Player"))
-                {
-                    _gravityHandler = null;
-                }
+                _gravityHandlers.Remove(gravityHandler);
             }
-        }
-
-        private IEnumerator StartCooldown()
-        {
-            _cooldown = true;
-            yield return new WaitForSeconds(0.05f);
-            _cooldown = false;
         }
     }
 }

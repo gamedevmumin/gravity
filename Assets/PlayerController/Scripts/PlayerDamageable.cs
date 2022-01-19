@@ -9,6 +9,11 @@ namespace PlayerController.Scripts
         [SerializeField] private GameObject deathEffect;
         [SerializeField] private ScreeneFreezer screenFreezer;
         [SerializeField] private GameEvent playerDeath;
+
+        private void Start()
+        {
+            screenFreezer = GameObject.Find("ScreenFreezer").GetComponent<ScreeneFreezer>();
+        }
         
         public void TakeDamage(int damage)
         {

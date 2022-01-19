@@ -9,5 +9,9 @@ public class SaveData
     [SerializeField] private List<LevelSaveData> levels;
     public bool hasGameBeenStarted;
     public int currentLevel;
-    public List<LevelSaveData> Levels => levels;
+    public List<LevelSaveData> Levels
+    {
+        get { return levels; }
+        set { levels = value; }
+    }
 }

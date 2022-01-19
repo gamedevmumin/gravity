@@ -42,6 +42,7 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
 
             if (groundedRememberTimer > 0f && jumpPressedRememberTimer > 0f)
             {
+                AudioManager.Instance.PlaySound("Jump");
                 jumpPressedRememberTimer = 0f;
                 groundedRememberTimer = 0f;
                 foreach (var rb in (rbs))
@@ -54,7 +55,7 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
             {
                 foreach (var rb in (rbs))
                 {
-                    if (rb.velocity.y > 0f)
+                    if (rb.velocity.y*-gravityInfo.gravityDirection > 0f)
                         rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * cutOfJumpHeight*-gravityInfo.gravityDirection);
                 }
             }

@@ -6,6 +6,7 @@ using Collectibles.Star.Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 
 public class GameManager : MonoBehaviour
@@ -25,10 +26,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<StateOwner> stateOwners;
     [SerializeField] private LevelInfo levelInfo;
     [SerializeField] private ScreeneFreezer screenFreezer;
+
+    [SerializeField] private GameObject pauseMenu;
+    private bool isGamePaused;
     
     private bool loaded;
+
+    private void Start()
+    {
+        Time.timeScale = 1f;
+    }
+    
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePauseMenu();
+        }
         if (loaded) return;
         LoadGame();
         loaded = true;
@@ -161,6 +175,13 @@ public class GameManager : MonoBehaviour
         playerController.SetPaused(true);
         yield return new WaitForSeconds(0f);
         playerController.SetPaused(false);
+    }
+
+    public void TogglePauseMenu()
+    {
+        isGamePaused = !isGamePaused;
+        pauseMenu.SetActive(isGamePaused);
+        Time.timeScale = isGamePaused ? 0.0f : 1.0f;
     }
     
 }

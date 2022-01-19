@@ -12,6 +12,11 @@ public class CollectibleUI : MonoBehaviour
     [SerializeField] private Animator textAnimator;
     private static readonly int Collected = Animator.StringToHash("Collected");
 
+    private void Start()
+    {
+        UpdateUI();
+    }
+    
     public void UpdateUI()
     {
         starsAmountText.text = $"{levelInfo.CollectedStars}";

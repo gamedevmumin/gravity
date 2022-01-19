@@ -12,7 +12,10 @@ public class GameFlowManager : MonoBehaviour
     private enum State { MainMenu, Game }
     [SerializeField] private SaveData saveData;
     [SerializeField] private TextMeshProUGUI menuStartOption;
-
+    [SerializeField] private SoundSettings soundSettings;
+    [SerializeField] private string[] sceneNames;
+    private bool _hasMenuJustLoaded;
+    
     public SaveData SaveData
     {
         get => saveData;
@@ -29,23 +32,85 @@ public class GameFlowManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
+    public void Update()
+    {
+        if (_hasMenuJustLoaded)
+        {
+            _hasMenuJustLoaded = false;
+            Initialize();
+        }
+    }
+    
+    public void Initialize()
+    {
+        var json = File.ReadAllText(Application.persistentDataPath + "/save.json");
+        saveData = JsonUtility.FromJson<SaveData>(json);
+        menuStartOption = GameObject.Find("MenuStartOption").GetComponent<TextMeshProUGUI>();
+        menuStartOption.text = saveData.hasGameBeenStarted ? "Kontynuuj" : "Rozpocznij";
+        if (saveData.currentLevel == sceneNames.Length)
+        {
+            menuStartOption.text = "Rozpocznij od nowa";
+            saveData.Levels = new List<LevelSaveData>();
+            saveData.currentLevel = 0;
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu")
+        {
+            _hasMenuJustLoaded = true;
+        }
+    }
     
     void Start()
     {
-        menuStartOption.text = saveData.hasGameBeenStarted ? "Continue" : "Start";
-        var json = File.ReadAllText(Application.persistentDataPath + "/save.json");
-        saveData = JsonUtility.FromJson<SaveData>(json);
+        Initialize();
+        SceneManager.sceneLoaded += OnSceneLoaded;
         //var json = JsonUtility.ToJson(saveData);
         //File.WriteAllText(Application.persistentDataPath +"/save.json", json);
     }
 
     public void HandleStartClick()
     {
-       // if (!saveData.hasGameBeenStarted)
+        if (!saveData.hasGameBeenStarted)
         {
             saveData.hasGameBeenStarted = true;
-            //save game
+            var json = JsonUtility.ToJson(saveData);
+            File.WriteAllText(Application.persistentDataPath +"/save.json", json);
             SceneManager.LoadScene("first");
         }
+        else
+        {
+            SceneManager.LoadScene(sceneNames[saveData.currentLevel]);
+        }
+    }
+
+    public void IncreaseLevel()
+    {
+        saveData.currentLevel++;
+        var json = JsonUtility.ToJson(saveData);
+        File.WriteAllText(Application.persistentDataPath +"/save.json", json);
+    }
+
+    public void LoadCurrentLevel()
+    {
+        SceneManager.LoadScene(sceneNames[saveData.currentLevel]);
+    }
+
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadSettingsMenu()
+    {
+        SceneManager.LoadScene("SettingsMenu");
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
