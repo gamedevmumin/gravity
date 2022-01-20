@@ -6,6 +6,17 @@ using UnityEngine;
 public class EnableOnTrigger : MonoBehaviour
 {
     [SerializeField] private GameObject objectToEnable;
+
+    public void Disable()
+    {
+        objectToEnable.SetActive(false);
+        enabled = false; 
+    }
+    
+    public void Enable()
+    {
+        enabled = true; 
+    }
     
     private void OnTriggerEnter2D(Collider2D other)
     {

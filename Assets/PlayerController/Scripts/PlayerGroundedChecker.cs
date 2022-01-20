@@ -8,8 +8,11 @@ public class PlayerGroundedChecker : MonoBehaviour, IGroundedChecking
     LayerMask whatIsGround;
     [SerializeField]
     GameObject groundCheck;
-    bool isGrounded = true;
 
+    [SerializeField] private GameObject upGroundCheck;
+    [SerializeField] private GameObject downGroundCheck;
+    bool isGrounded = true;
+    [SerializeField] private GravityInfo gravityInfo;
     void Start()
     {
         if (groundCheck == null) Debug.LogError("groundCheck variable isn't set");
@@ -17,6 +20,7 @@ public class PlayerGroundedChecker : MonoBehaviour, IGroundedChecking
 
     void FixedUpdate()
     {
+        groundCheck = gravityInfo.gravityDirection == -1 ? downGroundCheck : upGroundCheck;
         isGrounded = Physics2D.OverlapCircle(groundCheck.transform.position, 0.2f, whatIsGround);
     }
 

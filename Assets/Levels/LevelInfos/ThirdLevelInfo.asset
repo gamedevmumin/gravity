@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41d9a10cfde3c7f449c7228d37af86a0, type: 3}
-  m_Name: FirsLevelInfo
+  m_Name: ThirdLevelInfo
   m_EditorClassIdentifier: 
-  collectedStars: 0
-  starsToCollect: 10
+  levelData:
+    collectedStars: 0
+    starsToCollect: 10
+    isLocked: 0
