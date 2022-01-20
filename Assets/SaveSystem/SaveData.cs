@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+/**
+ * class representing data to save
+ */
 [System.Serializable]
 public class SaveData
 {

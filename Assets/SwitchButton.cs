@@ -16,7 +16,7 @@ public class SwitchButton : StateOwner
     private static readonly int Pressed = Animator.StringToHash("pressed");
 
     private IStateListener _stateListener;
-    // Start is called before the first frame update
+
     private void Start()
     {
         _stateListener = GetComponent<IStateListener>(); 
@@ -26,6 +26,7 @@ public class SwitchButton : StateOwner
     private void Update()
     {
         if (!_isInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        AudioManager.Instance.PlaySound("Activate");
         Press();
         pairedButton.Unpress();
     }

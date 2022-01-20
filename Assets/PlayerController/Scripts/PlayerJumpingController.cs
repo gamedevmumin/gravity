@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Interfaces;
 using UnityEngine;
 
+/**
+ * class representing player jumping controller
+ */
 public class PlayerJumpingController : MonoBehaviour, IJumpingController
 {
     [SerializeField]
@@ -11,10 +11,7 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
     [SerializeField]
     float groundedRemember = 0.2f;
     float groundedRememberTimer;
-
-    Rigidbody2D rb;
-    [SerializeField] [Range(0, 1)]
-    float cutOfJumpHeight = 0.85f;
+    
     IGroundedChecking groundedChecker;
     [SerializeField]
     private float jumpHeight;
@@ -23,10 +20,13 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
     
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         groundedChecker = GetComponent<IGroundedChecking>();
     }
 
+    /**
+     * method manages jumping of player - it awaits for player to press button and sets his velocity
+     * to simulate jumping
+     */
     public void ManageJumping()
     {
         groundedRememberTimer -= Time.deltaTime;
@@ -48,15 +48,6 @@ public class PlayerJumpingController : MonoBehaviour, IJumpingController
                 foreach (var rb in (rbs))
                 {
                     rb.velocity = new Vector2(rb.velocity.x, jumpHeight*-gravityInfo.gravityDirection);
-                }
-            } 
-            
-            if (Input.GetButtonUp("Jump"))
-            {
-                foreach (var rb in (rbs))
-                {
-                    if (rb.velocity.y*-gravityInfo.gravityDirection > 0f)
-                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * cutOfJumpHeight*-gravityInfo.gravityDirection);
                 }
             }
     }

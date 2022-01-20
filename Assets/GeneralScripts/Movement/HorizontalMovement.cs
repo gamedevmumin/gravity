@@ -3,21 +3,22 @@ using UnityEngine;
 
 namespace GeneralScripts.Movement
 {
+    /**
+     * class that handles horizontal movement logic
+     */
     public class HorizontalMovement : MonoBehaviour, IMovement
     {
         [SerializeField]
         private Rigidbody2D _rb;
 
+        /**
+         * sets rigidbody velocity to simulate movement
+         * @param direction - direction of movement
+         * @param speed - speed of movement
+         */
         public void Move(Vector2 direction, float speed)
         {
-            
-            if (direction.x != 0)
-            {
-                _rb.velocity = new Vector2(direction.x * speed * Time.fixedDeltaTime, _rb.velocity.y);
-            } else if (direction.y != 0)
-            {
-                _rb.velocity = new Vector2(_rb.velocity.x, direction.y * speed * Time.fixedDeltaTime);
-            }
+            _rb.velocity = new Vector2(direction.x * speed * Time.fixedDeltaTime, _rb.velocity.y);
         }
     }
 }

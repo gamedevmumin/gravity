@@ -24,6 +24,10 @@ public class LevelManager : MonoBehaviour
     public void SetStars(int amount)
     {
         levelInfo.CollectedStars=amount;
+        if (levelInfo.CollectedStars == levelInfo.StarsToCollect)
+        {
+            AudioManager.Instance.PlaySound("AllCollected");
+        }
         updateUI.Raise();
     }
     

@@ -5,11 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/**
+ * class representing manager that manages general flow of the game
+ */
 public class GameFlowManager : MonoBehaviour
 {
     public static GameFlowManager Instance { get; set; }
 
-    private enum State { MainMenu, Game }
     [SerializeField] private SaveData saveData;
     [SerializeField] private TextMeshProUGUI menuStartOption;
     [SerializeField] private SoundSettings soundSettings;
@@ -22,6 +24,10 @@ public class GameFlowManager : MonoBehaviour
         set => saveData = value;
     }
 
+    /**
+     * makes object singleton - if there is already an instance of it
+     * it is destroyed
+     */
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -42,6 +48,10 @@ public class GameFlowManager : MonoBehaviour
         }
     }
     
+    /**
+     * initializes menu - loads save file and sets
+     * UI options accordingly
+     */
     public void Initialize()
     {
         var json = File.ReadAllText(Application.persistentDataPath + "/save.json");
@@ -56,6 +66,9 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
+    /**
+     * sets _hasMenuJustLoaded to true to refresh man menu options if entered from other scene
+     */
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "MainMenu")
@@ -68,10 +81,12 @@ public class GameFlowManager : MonoBehaviour
     {
         Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
-        //var json = JsonUtility.ToJson(saveData);
-        //File.WriteAllText(Application.persistentDataPath +"/save.json", json);
     }
 
+    /**
+     * handles click of start button - it sets hasGameBeenStarted to true and
+     * loads first scene
+     */
     public void HandleStartClick()
     {
         if (!saveData.hasGameBeenStarted)
@@ -87,6 +102,9 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
+    /**
+     * increases currentLevel and saves it to file
+     */
     public void IncreaseLevel()
     {
         saveData.currentLevel++;
@@ -94,21 +112,33 @@ public class GameFlowManager : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath +"/save.json", json);
     }
 
+    /**
+     * loads current level
+     */
     public void LoadCurrentLevel()
     {
         SceneManager.LoadScene(sceneNames[saveData.currentLevel]);
     }
 
+    /**
+     * loads main menu
+     */
     public void LoadMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
 
+    /**
+     * loads settings menu
+     */
     public void LoadSettingsMenu()
     {
         SceneManager.LoadScene("SettingsMenu");
     }
 
+    /**
+     * exits game
+     */
     public void ExitGame()
     {
         Application.Quit();

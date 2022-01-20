@@ -923,6 +923,42 @@ MonoBehaviour:
     randomVolume: 0.1
     randomPitch: 0.1
     loop: 0
+  - name: Hurt
+    clip: {fileID: 8300000, guid: 6fa4e238c585dbe4ba9ad494f5a0c52e, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+  - name: Win
+    clip: {fileID: 8300000, guid: 132461a4aa8e88442b1f46a0d6977f85, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+  - name: Collect
+    clip: {fileID: 8300000, guid: 117d04d8711316a4791bff82214722b7, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+  - name: Music
+    clip: {fileID: 8300000, guid: c783b51feede179459bb878812e4c27f, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 1
+  - name: Activate
+    clip: {fileID: 8300000, guid: 911409958b4701e47a60fe7f58acf9f5, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
+  - name: AllCollected
+    clip: {fileID: 8300000, guid: ae754211b3a2ad2449455264167206df, type: 3}
+    volume: 1
+    randomVolume: 0.1
+    randomPitch: 0.1
+    loop: 0
   soundSettings: {fileID: 11400000, guid: 12a1fb7ca9c84de4dbc7b53623c27533, type: 2}
 --- !u!4 &1770910524
 Transform:
