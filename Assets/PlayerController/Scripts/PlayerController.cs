@@ -1,14 +1,14 @@
-using GeneralScripts.Gravity;
 using Interfaces;
 using UnityEngine;
 
 namespace PlayerController.Scripts
 {
+    /**
+     * class representing player controller
+     */
     public class PlayerController : MonoBehaviour
     {
         private IMovement _movement;
-        private IDirectionManager _directionManager;
-        private GravityHandler _gravityHandler;
         private Vector2 _movementInput;
 
         [SerializeField] private Rigidbody2D[] rbs;
@@ -20,16 +20,13 @@ namespace PlayerController.Scripts
         private void Start()
         {
             _movement = GetComponent<IMovement>();
-            _directionManager = GetComponent<IDirectionManager>();
             _jumpingController = GetComponent<IJumpingController>();
-            // _gravityHandler = GetComponent<GravityHandler>();
         }
 
-
+        
         private void Update()
         {
             _movementInput = new Vector2(Input.GetAxisRaw("Horizontal"), 0f);
-            _directionManager.ManageDirection(_movementInput);
             _jumpingController.ManageJumping();
         }
 
@@ -41,9 +38,12 @@ namespace PlayerController.Scripts
             }
         }
 
+        /**
+         * sets isPaused field to given value
+         */
         public void SetPaused(bool isPaused)
         {
-            this._isPaused = isPaused;
+            _isPaused = isPaused;
         }
     }
 }

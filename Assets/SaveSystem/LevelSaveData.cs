@@ -7,6 +7,7 @@ public class LevelSaveData
 {
     [SerializeField] public string sceneName;
     [SerializeField] public List<Vector3> starsLocations = new List<Vector3>();
+    [SerializeField] public List<Vector3> boxesLocations = new List<Vector3>();
     [SerializeField] public List<InteractableInfo> interactableInfos = new List<InteractableInfo>();
     [SerializeField] public List<RoomInfo> roomInfos = new List<RoomInfo>();
     [SerializeField] public LevelData levelData;

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace Room
 {
+    /**
+     * class representing room
+     */
     public class Room : MonoBehaviour
     {
         [SerializeField] private RoomInfo roomInfo;

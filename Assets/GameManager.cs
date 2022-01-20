@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera currentCamera;
     [SerializeField] private LevelManager levelManager;
     [SerializeField] private Transform starsParent;
+    [SerializeField] private Transform boxesParent;
+    [SerializeField] private GameObject boxPrefab;
     [SerializeField] private GameObject starPrefab;
     [SerializeField] private List<Room.Room> rooms;
     [SerializeField] private List<StateOwner> stateOwners;
@@ -48,6 +50,9 @@ public class GameManager : MonoBehaviour
         loaded = true;
     }
     
+    /**
+     * loads all information needed to return game to the state before save
+     */
     private void LoadGame()
     {
         var levels = GameFlowManager.Instance.SaveData.Levels;
@@ -66,7 +71,19 @@ public class GameManager : MonoBehaviour
                 star.localPosition = starLocation;
                 star.GetComponent<Collectible>().Initialize(screenFreezer);
             }
-
+            
+            for (int i = 0; i < boxesParent.childCount; i++)
+            {
+                Destroy(boxesParent.GetChild(i).gameObject);
+            }
+            
+            foreach (var boxLocation in levelSaveData.boxesLocations)
+            {
+                var box = Instantiate(boxPrefab, boxLocation, Quaternion.identity).transform;
+                box.parent = boxesParent;
+                box.localPosition = boxLocation;
+            }
+            
             foreach (var roomInfo in levelSaveData.roomInfos)
             {
                 var foundRoom = rooms.Find(room => room.RoomInfo.Id == roomInfo.Id);
@@ -92,11 +109,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /**
+     * saves game - amount of stars collected, their locations, locations of boxes, current checkpoint position and info about
+     * state of gravity and interactables
+     */
     public void SaveGame()
     {
         var saveData = GameFlowManager.Instance.SaveData;
         var levelSaveData = new LevelSaveData();
-        Debug.Log(levelInfo.CollectedStars);
+        
         levelSaveData.levelData = new LevelData {collectedStars = levelInfo.CollectedStars};
         
         for (var i = 0; i < starsParent.childCount; i++)
@@ -104,6 +125,11 @@ public class GameManager : MonoBehaviour
             levelSaveData.starsLocations.Add(starsParent.GetChild(i).localPosition);
         }
 
+        for (var i = 0; i < boxesParent.childCount; i++)
+        { 
+            levelSaveData.boxesLocations.Add(boxesParent.GetChild(i).localPosition);
+        }
+        
         levelSaveData.checkpointLocation = currentCheckpoint.transform.position;
 
         foreach (var stateOwner in stateOwners)
@@ -134,6 +160,10 @@ public class GameManager : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath +"/save.json", json);
     }
     
+    /**
+     * method that is called when checkpoint is entered - it sets currentCheckpoint to it
+     * and saves game
+     */
     public void OnCheckpointEntered(Checkpoint checkpoint)
     {
         if (currentCheckpoint == checkpoint) return;
@@ -141,11 +171,17 @@ public class GameManager : MonoBehaviour
         SaveGame();
     }
 
+    /**
+     * method called on player death, it starts coroutine that respawns player
+     */
     public void OnPlayerDeath()
     {
         StartCoroutine(DelayBeforeRespawn());
     }
 
+    /**
+     * coroutine that delays player respawn
+     */
     private IEnumerator DelayBeforeRespawn()
     {
         yield return new WaitForSeconds(timeToSpawn);
@@ -153,11 +189,18 @@ public class GameManager : MonoBehaviour
             Instantiate(playerControllerPrefab, currentCheckpoint.transform.position, Quaternion.identity);
     }
 
+    /**
+     * starts coroutine that handles switching room when player moves from one room to another
+     */
     public void SwitchRoom(CinemachineVirtualCamera roomCamera)
     {
         StartCoroutine(SwitchRoomDelay(roomCamera));
     }
     
+    /*
+     * method switching priority of virtual cameras so main camera changes its position smoothly
+     * @param roomCamera - camera to change to 
+     */
     public void SwitchCamera(CinemachineVirtualCamera roomCamera)
     {
         currentCamera.Priority = 0;
@@ -169,6 +212,11 @@ public class GameManager : MonoBehaviour
             cameraController.FollowPlayer(playerController);
         }
     }
+    
+    /**
+     * delays switching of rooms
+     * @param roomCamera - camera to switch to
+     */
     private IEnumerator SwitchRoomDelay(CinemachineVirtualCamera roomCamera)
     {
         SwitchCamera(roomCamera);
@@ -177,6 +225,9 @@ public class GameManager : MonoBehaviour
         playerController.SetPaused(false);
     }
 
+    /**
+     * toggles pause menu
+     */
     public void TogglePauseMenu()
     {
         isGamePaused = !isGamePaused;

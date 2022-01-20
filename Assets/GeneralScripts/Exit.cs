@@ -12,6 +12,7 @@ public class Exit : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioManager.Instance.PlaySound("Win");
             finishedLevel.Raise();
         }
     }

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu]
 public class SoundSettings : ScriptableObject
@@ -16,6 +18,7 @@ public class SoundSettings : ScriptableObject
         set
         {
             musicVolume = value;
+            Debug.Log(musicVolume);
             if (musicVolume >= 10)
             {
                 musicVolume = 10;
@@ -24,6 +27,8 @@ public class SoundSettings : ScriptableObject
             {
                 musicVolume = 0;
             }
+
+            AudioManager.Instance.PlaySound("Music", true);
         }
     }
     

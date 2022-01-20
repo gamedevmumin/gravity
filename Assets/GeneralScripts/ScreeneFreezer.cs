@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/**
+ * class responsible for freezing game for given time
+ */
 public class ScreeneFreezer : MonoBehaviour
 {
     private bool isFrozen = false;
     private float duration;
     private bool shouldFreeze = false;
 
+    /**
+     * sets shouldFreeze to true and duration for given in param
+     * @param duration
+     */
     public void Freeze(float duration)
     {
         if (shouldFreeze != true)
@@ -24,6 +31,9 @@ public class ScreeneFreezer : MonoBehaviour
         }
     }
 
+    /**
+     * sets Time.timeScale to 0 for time of field duration to imitate freezing of screen
+     */
     private IEnumerator DoFreeze()
     {
         isFrozen = true;

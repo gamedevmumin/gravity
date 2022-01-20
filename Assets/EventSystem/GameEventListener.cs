@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/**
+ * class representing game event listener
+ */
 public class GameEventListener : MonoBehaviour
 {
 
@@ -19,6 +22,9 @@ public class GameEventListener : MonoBehaviour
         Event.UnregisterListener(this);
     }
 
+    /**
+     * calls Invoke method on Response field
+     */
     public void OnEventRaised()
     {
         Response.Invoke();

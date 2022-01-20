@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/**
+ * class representing UI that displays stars
+ */
 public class CollectibleUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI starsAmountText;
@@ -17,6 +20,9 @@ public class CollectibleUI : MonoBehaviour
         UpdateUI();
     }
     
+    /**
+     * updates UI to match current amount of stars collected by player
+     */
     public void UpdateUI()
     {
         starsAmountText.text = $"{levelInfo.CollectedStars}";

@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
+/**
+ * class representing sound
+ */
 [System.Serializable]
 public class Sound 
 {
@@ -22,21 +25,31 @@ public class Sound
 
 	public bool loop;
 
-	public void setSource(AudioSource _source)
+	
+	/**
+	 * sets source of sound
+	 */
+	public void SetSource(AudioSource source)
 	{
-		this._source = _source;
-		this._source.clip = clip;
-		this._source.loop = loop;
+		_source = source;
+		_source.clip = clip;
+		_source.loop = loop;
 	}
 
-	public void play()
+	/**
+	 * plays sound
+	 */
+	public void Play()
 	{
 		_source.volume = volume * (1 + Random.Range(-randomVolume/2f, randomVolume/2f));
 		_source.pitch =  1 + Random.Range(-randomPitch / 2f, randomPitch / 2f);
 		_source.Play();
 	}
 
-	public void stop()
+	/**
+	 * stops sound
+	 */
+	public void Stop()
 	{
 		_source.Stop();
 	}
@@ -72,17 +85,27 @@ public class AudioManager : MonoBehaviour
 		{
 			var go = new GameObject("Sound_" + i + "_" + sounds[i].name);
 			go.transform.SetParent(this.transform);
-			sounds[i].setSource(go.AddComponent<AudioSource>());
+			sounds[i].SetSource(go.AddComponent<AudioSource>());
 			
 		}
+		PlaySound("Music", true);
 	}
 
-	public void PlaySound(string soundName)
+	public void PlaySound(string soundName, bool music = false)
 	{
 		foreach (var t in sounds.Where(t => t.name == soundName))
 		{
-			t.volume *= (soundSettings.SoundVolume)/10f;
-			t.play();
+			if (!music)
+			{
+				t.volume = (soundSettings.SoundVolume)/10f;
+			}
+			else
+			{
+				Debug.Log(soundSettings.MusicVolume);
+				t.volume = (soundSettings.MusicVolume)/10f;
+			}
+			
+			t.Play();
 			return;
 		}
 	}
@@ -91,7 +114,7 @@ public class AudioManager : MonoBehaviour
 	{
 		foreach (var t in sounds.Where(t => t.name == soundName))
 		{
-			t.stop();
+			t.Stop();
 			return;
 		}
 	}

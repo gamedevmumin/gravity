@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * class representing movable structure
+ */
 public class MovableStructure : Activable
 {
     [SerializeField] private Transform transformHidden;
@@ -11,6 +14,9 @@ public class MovableStructure : Activable
     private int pressurePlatePressed;
     [SerializeField] private int pressurePlateRequired;
 
+    /**
+     * changes position of movable structure using lerp depending on interpolationRatio
+     */
     void ChangePosition()
     {
         var x = Mathf.Lerp(transformHidden.position.x, transformShown.position.x, interpolationRatio);
@@ -35,22 +41,26 @@ public class MovableStructure : Activable
     }
 
     /*
-     * returns true if enough plates is pressed
+     * returns true if enough plates are pressed
      */
     private bool IsHiding()
     {
         return pressurePlatePressed >= pressurePlateRequired;
     }
     
+    /**
+     * increases number of plates pressed
+     */
     public override void Activate()
     {
-        Debug.Log(pressurePlatePressed);
         pressurePlatePressed++;
     }
 
+    /**
+     * decreases number of plates pressed
+     */
     public override void Deactivate()
     {
-        Debug.Log(pressurePlatePressed);
         pressurePlatePressed--;
     }
 }
